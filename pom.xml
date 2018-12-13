@@ -73,7 +73,12 @@
 			<artifactId>google-api-services-sheets</artifactId>
 			<version>v4-rev496-1.23.0</version>
 		</dependency>
-
+	 <dependency>
+	  <groupId>com.sanmina</groupId>
+	  <artifactId>SpringbootBasicTemplate</artifactId>
+	  <version>1.0</version>
+	  <type>war</type>
+	 </dependency>
 	</dependencies>
 
 	<build>
