@@ -3,12 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.sanmina.springbootbasictemplate.controller;
+package com.sanmina.gettingstarted.controller;
 
-import com.sanmina.springbootbasictemplate.pojo.ApplicationMenu;
-import com.sanmina.springbootbasictemplate.pojo.LdapAuth;
-import com.sanmina.springbootbasictemplate.pojo.ResponseApi;
-import com.sanmina.springbootbasictemplate.pojo.UserInfo;
+/**
+ *
+ * @author nestor_milian
+ */
+import com.sanmina.gettingstarted.pojo.ApplicationMenu;
+import com.sanmina.gettingstarted.pojo.LdapAuth;
+import com.sanmina.gettingstarted.pojo.ResponseApi;
+import com.sanmina.gettingstarted.pojo.UserInfo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -24,7 +28,7 @@ import org.springframework.web.client.RestClientException;
  */
 @CrossOrigin
 @RestController
-public class IntranetSecurityController extends GeneralClass {
+public class IntranetSecurityController extends GeneralController {
 
     @RequestMapping(value = "/Get/User/Info/", method = RequestMethod.GET)
     public ResponseEntity<Object> GetUserInfo(@RequestParam("user") String user, @RequestParam(name = "password", required = false) String password, @RequestParam("application") String application) {
