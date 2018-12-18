@@ -10,7 +10,7 @@ package com.sanmina.gettingstarted.pojo;
  * @author nestor_milian
  */
 public class LdapAuth {
-        private Boolean success;
+    private Boolean success;
     private String message;
 
     public Boolean getSuccess() {

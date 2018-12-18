@@ -13,6 +13,7 @@ import com.sanmina.gettingstarted.pojo.ApplicationMenu;
 import com.sanmina.gettingstarted.pojo.LdapAuth;
 import com.sanmina.gettingstarted.pojo.ResponseApi;
 import com.sanmina.gettingstarted.pojo.UserInfo;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -43,7 +44,7 @@ public class IntranetSecurityController extends GeneralController {
                     if (!userInfo.getActive()) {
                         responseApi.setMessage("This user isn't active");
                         responseApi.setCode(401);
-                        return new ResponseEntity(responseApi, HttpStatus.OK);
+                        return new ResponseEntity<>(responseApi, HttpStatus.OK);
                     }
                     responseApi.setData(userInfo);
                     responseApi.setCode(200);
@@ -53,7 +54,7 @@ public class IntranetSecurityController extends GeneralController {
                     e.printStackTrace();
                     responseApi.setMessage("Server Error, Please report this to IT");
                     responseApi.setCode(401);
-                    return new ResponseEntity(responseApi, HttpStatus.OK);
+                    return new ResponseEntity<>(responseApi, HttpStatus.OK);
                 }
             } else if (user.contains("_") && password != null) {
 
@@ -67,7 +68,7 @@ public class IntranetSecurityController extends GeneralController {
                     if (!userInfo.getActive()) {
                         responseApi.setMessage("This user isn't active");
                         responseApi.setCode(401);
-                        return new ResponseEntity(responseApi, HttpStatus.OK);
+                        return new ResponseEntity<>(responseApi, HttpStatus.OK);
                     }
                     responseApi.setData(userInfo);
                     responseApi.setCode(200);
@@ -77,12 +78,12 @@ public class IntranetSecurityController extends GeneralController {
                 } else {
                     responseApi.setMessage("Incorrect User Or Password");
                     responseApi.setCode(401);
-                    return new ResponseEntity(responseApi, HttpStatus.OK);
+                    return new ResponseEntity<>(responseApi, HttpStatus.OK);
                 }
             } else {
                 responseApi.setMessage("Incorrect User Or Password");
                 responseApi.setCode(401);
-                return new ResponseEntity(responseApi, HttpStatus.OK);
+                return new ResponseEntity<>(responseApi, HttpStatus.OK);
             }
         } catch (RestClientException e) {
             e.printStackTrace();
