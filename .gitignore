@@ -33,3 +33,4 @@
 .project
 .factorypath
 .classpath
+.vscode/settings.json
