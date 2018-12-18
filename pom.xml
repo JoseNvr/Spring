@@ -73,9 +73,7 @@
 			<artifactId>google-api-services-sheets</artifactId>
 			<version>v4-rev496-1.23.0</version>
 		</dependency>
-
 	</dependencies>
-
 	<build>
 		<plugins>
 			<plugin>
