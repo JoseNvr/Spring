@@ -1,5 +1,7 @@
 package com.sanmina.gettingstarted.controller;
 
+import java.util.Optional;
+
 import com.sanmina.gettingstarted.model.UserLogin;
 import com.sanmina.gettingstarted.pojo.UserLoginData;
 
@@ -19,7 +21,7 @@ public class UserController extends GeneralController {
 
 	@RequestMapping(value = "/Get/Data", method = RequestMethod.GET)
 	public ResponseEntity<Object> GetData(@RequestParam("username") String username) {
-		UserLogin userLogin = userRepository.findByUserName(username);
+		Optional<UserLogin> userLogin = userRepository.findByUserName(username);
 		return new ResponseEntity<>(userLogin, HttpStatus.OK);
 	}
 

@@ -1,6 +1,6 @@
 package com.sanmina.gettingstarted.model;
 
-import java.io.Serializable;
+import java.util.Collection;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,21 +11,26 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-// import lombok.Getter;
-// import lombok.NoArgsConstructor;
-// import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 /*
  * Si se desea utilizar Lombook es necesario eliminar Getter y Setter,
  * descomentando la dependecia del archivo pom.xml
  */
-// @NoArgsConstructor
-// @Getter
-// @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 @JsonIgnoreProperties({ "password" })
 @Table(catalog = "[db_SpringTest]", schema = "[dbo]")
-public class UserLogin implements Serializable {
+public class UserLogin implements UserDetails {
 
 	private static final long serialVersionUID = 1L;
 
@@ -43,36 +48,34 @@ public class UserLogin implements Serializable {
 	@Column(name = "[Password]")
 	private String password;
 
-	public Integer getId() {
-		return this.id;
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return null;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return this.name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getUserName() {
+	@Override
+	public String getUsername() {
 		return this.userName;
 	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
+	@Override
+	public boolean isAccountNonExpired() {
+		return false;
 	}
 
-	public String getPassword() {
-		return this.password;
+	@Override
+	public boolean isAccountNonLocked() {
+		return false;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return false;
+	}
+
+	@Override
+	public boolean isEnabled() {
+		return false;
 	}
 
 }
