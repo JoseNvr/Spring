@@ -40,7 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         "/**/*.css",
                         "/**/*.js")
                         .permitAll()
-                .antMatchers("/Get/User/Info/").permitAll()
+                .antMatchers("/Auth/User/").permitAll()
                 .antMatchers(HttpMethod.GET, "/users/**").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/users/**").hasAnyRole("ADMIN","asd","asdas","sdasds")
                 .antMatchers(HttpMethod.GET, "/v1/users/**").permitAll()

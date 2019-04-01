@@ -5,17 +5,26 @@
  */
 package com.sanmina.gettingstarted.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  *
  * @author nestor_milian
  */
 import com.sanmina.gettingstarted.pojo.ApplicationMenu;
+import com.sanmina.gettingstarted.pojo.ApplicationPlants;
 import com.sanmina.gettingstarted.pojo.LdapAuth;
+import com.sanmina.gettingstarted.pojo.Permissions;
 import com.sanmina.gettingstarted.pojo.ResponseApi;
 import com.sanmina.gettingstarted.pojo.UserInfo;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,103 +40,158 @@ import org.springframework.web.client.RestClientException;
 @RestController
 public class IntranetSecurityController extends GeneralController {
 
-    @RequestMapping(value = "/Get/User/Info/", method = RequestMethod.GET)
+    @RequestMapping(value = "/Auth/User/", method = RequestMethod.GET)
     public ResponseEntity<Object> GetUserInfo(@RequestParam("user") String user,
             @RequestParam(name = "password", required = false) String password,
+            @RequestParam(name = "plant", required = false) String plant,
             @RequestParam("application") String application) {
         ResponseApi responseApi = new ResponseApi();
+        UserInfo userInfo = null;
         try {
             if (user.contains("@sanmina.com") && password == null) { // WIth Google Account
                 try {
-                    UserInfo userInfo = restTemplate.getForObject(plant8API + "/GetEmployeeNumber/?employee=" + user,
+                    userInfo = restTemplate.getForObject(plant8API + "/GetEmployeeNumber/?employee=" + user,
                             UserInfo.class);
                     if (!userInfo.getActive()) {
+                        responseApi.setSuccess(false);
                         responseApi.setMessage("This user isn't active");
                         responseApi.setCode(401);
                         return new ResponseEntity<>(responseApi, HttpStatus.OK);
                     }
-                    responseApi.setData(userInfo);
-                    responseApi.setCode(200);
-                    responseApi.setMessage("Welcome " + userInfo.getName());
-                    return new ResponseEntity<>(responseApi, HttpStatus.OK);
                 } catch (Exception e) {
                     e.printStackTrace();
+                    responseApi.setSuccess(false);
                     responseApi.setMessage("Server Error, Please report this to IT");
                     responseApi.setCode(401);
                     return new ResponseEntity<>(responseApi, HttpStatus.OK);
                 }
             } else if (user.contains("_") && password != null) {
-
                 String urlLdap;
                 urlLdap = plant8API + "/ldapAuth/?user=" + user + "&password=" + password;
                 LdapAuth ldapAuth = restTemplate.getForObject(urlLdap, LdapAuth.class);
-                UserInfo userInfo = restTemplate.getForObject(plant8API + "/GetEmployeeNumber/?employee=" + user,
+                userInfo = restTemplate.getForObject(plant8API + "/GetEmployeeNumber/?employee=" + user,
                         UserInfo.class);
-                responseApi.setSuccess(true);
                 if (ldapAuth.getSuccess() && userInfo != null) {
                     if (!userInfo.getActive()) {
+                        responseApi.setSuccess(false);
                         responseApi.setMessage("This user isn't active");
                         responseApi.setCode(401);
                         return new ResponseEntity<>(responseApi, HttpStatus.OK);
                     }
-                    responseApi.setData(userInfo);
-                    responseApi.setCode(200);
-                    responseApi.setMessage("Welcome ");
-                    return new ResponseEntity<>(responseApi, HttpStatus.OK);
-
                 } else {
+                    responseApi.setSuccess(false);
                     responseApi.setMessage("Incorrect User Or Password");
                     responseApi.setCode(401);
                     return new ResponseEntity<>(responseApi, HttpStatus.OK);
                 }
             } else {
+                responseApi.setSuccess(false);
                 responseApi.setMessage("Incorrect User Or Password");
                 responseApi.setCode(401);
                 return new ResponseEntity<>(responseApi, HttpStatus.OK);
             }
         } catch (RestClientException e) {
             e.printStackTrace();
-            responseApi.setSuccess(Boolean.TRUE);
-            responseApi.setTitle("Ciena Rework Server Error");
+            responseApi.setSuccess(false);
+            responseApi.setTitle("Application Server Error");
             responseApi.setType("danger");
             responseApi.setMessage("Server Error Report to IT");
             responseApi.setCode(500);
+            return new ResponseEntity<>(responseApi, HttpStatus.OK);
         }
-
-        return new ResponseEntity<>(responseApi, HttpStatus.OK);
-
-    }
-
-    @RequestMapping(value = "/Get/User/Menu/", method = RequestMethod.GET)
-    public ResponseEntity<Object> GetUserPlantMenu(@RequestParam("user") String user,
-            @RequestParam("application") String application, @RequestParam("plant") String plant) {
-        ResponseApi responseApi = new ResponseApi();
+        String url = campusAPI + "/getApplicationPlants?username=" + userInfo.getUsername() + "&applicationIdName="
+                + application;
+        ApplicationPlants applicationPlants;
         try {
-            String url;
-            url = campusAPI + "/getApplicationPlantsProfilePermissionMenu?username=" + user + "&applicationIdName="
-                    + application + "&orgCode=" + plant;
-            ApplicationMenu applicationMenu = restTemplate.getForObject(url, ApplicationMenu.class);
-
-            if (applicationMenu.getData().getPermissions().size() == 0) {
-
-                responseApi.setSuccess(true);
-                responseApi.setCode(200);
-                responseApi.setMessage("No Autorizado");
-
-            } else {
-                responseApi.setSuccess(true);
-                responseApi.setData(applicationMenu.getData());
-                responseApi.setCode(200);
-                responseApi.setMessage("Ok");
+            applicationPlants = restTemplate.getForObject(url, ApplicationPlants.class);
+            if (plant == null) {
+                if (applicationPlants.getSuccess()) {
+                    if (applicationPlants.getData().getPlants().size() > 0) {
+                        plant = applicationPlants.getData().getPlants().get(0).getPlant();
+                    } else {
+                        responseApi.setSuccess(false);
+                        responseApi.setTitle("Usuario sin permisos para la aplicación");
+                        responseApi.setType("danger");
+                        responseApi.setMessage("Este usuario no cuenta con permisos");
+                        responseApi.setCode(401);
+                        return new ResponseEntity<>(responseApi, HttpStatus.OK);
+                    }
+                } else {
+                    responseApi.setSuccess(false);
+                    responseApi.setTitle("Usuario sin permisos para la aplicación");
+                    responseApi.setType("danger");
+                    responseApi.setMessage("Este usuario no cuenta con permisos");
+                    responseApi.setCode(401);
+                    return new ResponseEntity<>(responseApi, HttpStatus.OK);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
-            responseApi.setSuccess(Boolean.TRUE);
-            responseApi.setTitle("Ciena Rework Server Error");
+            responseApi.setSuccess(false);
+            responseApi.setTitle("Usuario sin permisos para la aplicación");
             responseApi.setType("danger");
-            responseApi.setMessage("Server Error Report to IT");
-            responseApi.setCode(500);
+            responseApi.setMessage("Este usuario no cuenta con permisos");
+            responseApi.setCode(401);
+            return new ResponseEntity<>(responseApi, HttpStatus.OK);
         }
+        url = campusAPI + "/getApplicationPlantsProfilePermissionMenu?username=" + userInfo.getUsername()
+                + "&applicationIdName=" + application + "&orgCode=" + plant;
+        ApplicationMenu applicationMenu;
+        try {
+            applicationMenu = restTemplate.getForObject(url, ApplicationMenu.class);
+            if (applicationMenu.getSuccess()) {
+                if (applicationMenu.getData().getPermissions().size() == 0) {
+                    responseApi.setSuccess(false);
+                    responseApi.setTitle("Usuario sin permisos para la aplicación");
+                    responseApi.setType("danger");
+                    responseApi.setMessage("Este usuario no cuenta con permisos");
+                    responseApi.setCode(401);
+                    return new ResponseEntity<>(responseApi, HttpStatus.OK);
+                } else {
+                    applicationMenu.setPlants(applicationPlants.getData());
+                }
+            } else {
+                responseApi.setSuccess(false);
+                responseApi.setTitle("Usuario sin permisos para la aplicación");
+                responseApi.setType("danger");
+                responseApi.setMessage("Este usuario no cuenta con permisos");
+                responseApi.setCode(401);
+                return new ResponseEntity<>(responseApi, HttpStatus.OK);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            responseApi.setSuccess(false);
+            responseApi.setTitle("Usuario sin permisos para la aplicación");
+            responseApi.setType("danger");
+            responseApi.setMessage("Este usuario no cuenta con permisos");
+            responseApi.setCode(401);
+            return new ResponseEntity<>(responseApi, HttpStatus.OK);
+        }
+        List<String> roles = new ArrayList<>();
+        for (Permissions permission : applicationMenu.getData().getPermissions()) {
+            if (!roles.contains(permission.getPermission())) {
+                roles.add(permission.getPermission());
+            }
+        }
+        System.out.println(roles.size());
+        String token = jwtTokenProvider.createToken(userInfo.getUsername(), roles);
+        System.out.println(token);
+        responseApi.setSuccess(true);
+        responseApi.setData(applicationMenu);
+        responseApi.setData2(token);
+        responseApi.setCode(200);
+        responseApi.setMessage("Welcome " + userInfo.getName());
+        return new ResponseEntity<>(responseApi, HttpStatus.OK);
+
+    }
+
+    @RequestMapping(value = "/Get/User/", method = RequestMethod.GET)
+    public ResponseEntity<Object> GetUser(@AuthenticationPrincipal UserDetails userDetails) {
+        ResponseApi responseApi = new ResponseApi();
+        responseApi.setData(userDetails.getUsername());
+        responseApi.setData2(userDetails.getAuthorities().stream());
+
         return new ResponseEntity<>(responseApi, HttpStatus.OK);
     }
+
 }

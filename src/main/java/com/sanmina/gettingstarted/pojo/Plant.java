@@ -12,17 +12,15 @@ import lombok.Setter;
 
 /**
  *
- * @author nestor_milian
+ * @author jorge_covarrubias
  */
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ApplicationMenu {
+public class Plant {
 
-    private Boolean success;
-    private String message;
-    private Menu data;
-    private Plants plants;
+    private String plant;
+    private Integer idPlant;
 
 }
