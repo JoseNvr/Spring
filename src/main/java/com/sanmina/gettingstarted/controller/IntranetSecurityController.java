@@ -7,7 +7,6 @@ package com.sanmina.gettingstarted.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  *
@@ -16,13 +15,12 @@ import java.util.stream.Collectors;
 import com.sanmina.gettingstarted.pojo.ApplicationMenu;
 import com.sanmina.gettingstarted.pojo.ApplicationPlants;
 import com.sanmina.gettingstarted.pojo.LdapAuth;
-import com.sanmina.gettingstarted.pojo.Permissions;
 import com.sanmina.gettingstarted.pojo.ResponseApi;
 import com.sanmina.gettingstarted.pojo.UserInfo;
+import com.sanmina.gettingstarted.pojo.ProfileData;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -112,7 +110,7 @@ public class IntranetSecurityController extends GeneralController {
                         responseApi.setSuccess(false);
                         responseApi.setTitle("Usuario sin permisos para la aplicación");
                         responseApi.setType("danger");
-                        responseApi.setMessage("Este usuario no cuenta con permisos");
+                        responseApi.setMessage("Este usuario no cuenta con permisos (1*)");
                         responseApi.setCode(401);
                         return new ResponseEntity<>(responseApi, HttpStatus.OK);
                     }
@@ -120,7 +118,7 @@ public class IntranetSecurityController extends GeneralController {
                     responseApi.setSuccess(false);
                     responseApi.setTitle("Usuario sin permisos para la aplicación");
                     responseApi.setType("danger");
-                    responseApi.setMessage("Este usuario no cuenta con permisos");
+                    responseApi.setMessage("Este usuario no cuenta con permisos (2*)");
                     responseApi.setCode(401);
                     return new ResponseEntity<>(responseApi, HttpStatus.OK);
                 }
@@ -130,12 +128,13 @@ public class IntranetSecurityController extends GeneralController {
             responseApi.setSuccess(false);
             responseApi.setTitle("Usuario sin permisos para la aplicación");
             responseApi.setType("danger");
-            responseApi.setMessage("Este usuario no cuenta con permisos");
+            responseApi.setMessage("Este usuario no cuenta con permisos (3*)");
             responseApi.setCode(401);
             return new ResponseEntity<>(responseApi, HttpStatus.OK);
         }
         url = campusAPI + "/getApplicationPlantsProfilePermissionMenu?username=" + userInfo.getUsername()
                 + "&applicationIdName=" + application + "&orgCode=" + plant;
+        System.out.println(url);
         ApplicationMenu applicationMenu;
         try {
             applicationMenu = restTemplate.getForObject(url, ApplicationMenu.class);
@@ -144,7 +143,7 @@ public class IntranetSecurityController extends GeneralController {
                     responseApi.setSuccess(false);
                     responseApi.setTitle("Usuario sin permisos para la aplicación");
                     responseApi.setType("danger");
-                    responseApi.setMessage("Este usuario no cuenta con permisos");
+                    responseApi.setMessage("Este usuario no cuenta con permisos (4*)");
                     responseApi.setCode(401);
                     return new ResponseEntity<>(responseApi, HttpStatus.OK);
                 } else {
@@ -154,7 +153,7 @@ public class IntranetSecurityController extends GeneralController {
                 responseApi.setSuccess(false);
                 responseApi.setTitle("Usuario sin permisos para la aplicación");
                 responseApi.setType("danger");
-                responseApi.setMessage("Este usuario no cuenta con permisos");
+                responseApi.setMessage("Este usuario no cuenta con permisos (5*)");
                 responseApi.setCode(401);
                 return new ResponseEntity<>(responseApi, HttpStatus.OK);
             }
@@ -163,14 +162,14 @@ public class IntranetSecurityController extends GeneralController {
             responseApi.setSuccess(false);
             responseApi.setTitle("Usuario sin permisos para la aplicación");
             responseApi.setType("danger");
-            responseApi.setMessage("Este usuario no cuenta con permisos");
+            responseApi.setMessage("Este usuario no cuenta con permisos (6*)");
             responseApi.setCode(401);
             return new ResponseEntity<>(responseApi, HttpStatus.OK);
         }
         List<String> roles = new ArrayList<>();
-        for (Permissions permission : applicationMenu.getData().getPermissions()) {
-            if (!roles.contains(permission.getPermission())) {
-                roles.add(permission.getPermission());
+        for (ProfileData profileData : applicationMenu.getData().getProfiles()) {
+            if (!roles.contains(profileData.getProfile())) {
+                roles.add(profileData.getProfile());
             }
         }
         System.out.println(roles.size());
@@ -178,7 +177,7 @@ public class IntranetSecurityController extends GeneralController {
         System.out.println(token);
         responseApi.setSuccess(true);
         responseApi.setData(applicationMenu);
-        responseApi.setData2(token);
+        responseApi.setData2(roles);
         responseApi.setCode(200);
         responseApi.setMessage("Welcome " + userInfo.getName());
         return new ResponseEntity<>(responseApi, HttpStatus.OK);
@@ -189,7 +188,10 @@ public class IntranetSecurityController extends GeneralController {
     public ResponseEntity<Object> GetUser(@AuthenticationPrincipal UserDetails userDetails) {
         ResponseApi responseApi = new ResponseApi();
         responseApi.setData(userDetails.getUsername());
-        responseApi.setData2(userDetails.getAuthorities().stream());
+        // Jws<Claims> jws =
+        // Jwts.parser().setSigningKeyResolver(jwtTokenProvider.getSecretKey())
+        // .parseClaimsJws(jwt);
+        // responseApi.setData2(userDetails.);
 
         return new ResponseEntity<>(responseApi, HttpStatus.OK);
     }

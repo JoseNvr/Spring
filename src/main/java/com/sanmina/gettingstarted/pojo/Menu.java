@@ -5,8 +5,12 @@
  */
 package com.sanmina.gettingstarted.pojo;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  *
@@ -14,34 +18,11 @@ import java.util.List;
  */
 
 @JsonIgnoreProperties(ignoreUnknown = true)
+@Getter
+@Setter
 public class Menu {
     private List<MenuData> menu;
-    private List<ProfileData> profile;
+    private List<ProfileData> profiles;
     private List<Permissions> permissions;
 
-    public List<MenuData> getMenu() {
-        return menu;
-    }
-
-    public void setMenu(List<MenuData> menu) {
-        this.menu = menu;
-    }
-
-    public List<ProfileData> getProfile() {
-        return profile;
-    }
-
-    public void setProfile(List<ProfileData> profile) {
-        this.profile = profile;
-    }
-
-    public List<Permissions> getPermissions() {
-        return permissions;
-    }
-
-    public void setPermissions(List<Permissions> permissions) {
-        this.permissions = permissions;
-    }
-
- 
 }
