@@ -166,18 +166,10 @@ public class IntranetSecurityController extends GeneralController {
             responseApi.setCode(401);
             return new ResponseEntity<>(responseApi, HttpStatus.OK);
         }
-        List<String> roles = new ArrayList<>();
-        for (ProfileData profileData : applicationMenu.getData().getProfiles()) {
-            if (!roles.contains(profileData.getProfile())) {
-                roles.add(profileData.getProfile());
-            }
-        }
-        System.out.println(roles.size());
-        String token = jwtTokenProvider.createToken(userInfo.getUsername(), roles);
+        String token = jwtTokenProvider.createToken(userInfo.getUsername());
         System.out.println(token);
         responseApi.setSuccess(true);
         responseApi.setData(applicationMenu);
-        responseApi.setData2(roles);
         responseApi.setCode(200);
         responseApi.setMessage("Welcome " + userInfo.getName());
         return new ResponseEntity<>(responseApi, HttpStatus.OK);
@@ -188,10 +180,7 @@ public class IntranetSecurityController extends GeneralController {
     public ResponseEntity<Object> GetUser(@AuthenticationPrincipal UserDetails userDetails) {
         ResponseApi responseApi = new ResponseApi();
         responseApi.setData(userDetails.getUsername());
-        // Jws<Claims> jws =
-        // Jwts.parser().setSigningKeyResolver(jwtTokenProvider.getSecretKey())
-        // .parseClaimsJws(jwt);
-        // responseApi.setData2(userDetails.);
+        
 
         return new ResponseEntity<>(responseApi, HttpStatus.OK);
     }

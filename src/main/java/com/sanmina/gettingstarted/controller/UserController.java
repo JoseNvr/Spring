@@ -29,7 +29,7 @@ public class UserController extends GeneralController {
 	public ResponseEntity<Object> PostData(@RequestBody UserLoginData userLoginData) {
 		UserLogin userLogin = new UserLogin();
 		userLogin.setName(userLoginData.getName());
-		userLogin.setUserName(userLoginData.getUserName());
+		userLogin.setUsername(userLoginData.getUserName());
 		userLogin.setPassword(userLoginData.getPassword());
 		userRepository.save(userLogin);
 		return new ResponseEntity<>(userLogin, HttpStatus.OK);
