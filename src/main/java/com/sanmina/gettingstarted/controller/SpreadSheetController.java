@@ -22,7 +22,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class SpreadSheetController extends GeneralController {
 
 	/*
-	 * Spreadsheet Test https://docs.google.com/spreadsheets/d/1o70yF6FnKgXHp1_QVEBNkDh3ttLtMnkrgYoEVpRGrpQ/edit#gid=1651021798
+	 * Spreadsheet Test https://docs.google.com/spreadsheets/d/
+	 * 1o70yF6FnKgXHp1_QVEBNkDh3ttLtMnkrgYoEVpRGrpQ/edit#gid=1651021798
 	 */
 
 	@RequestMapping(value = "/Get/Simple/Data", method = RequestMethod.GET)
@@ -46,7 +47,7 @@ public class SpreadSheetController extends GeneralController {
 			List<Object> data = new ArrayList<>();
 			data.add(userlogin.getId());
 			data.add(userlogin.getName());
-			data.add(userlogin.getUserName());
+			data.add(userlogin.getUsername());
 			dataValues.add(data);
 		}
 		valueRange.setValues(dataValues);

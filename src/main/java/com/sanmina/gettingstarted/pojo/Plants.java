@@ -5,6 +5,8 @@
  */
 package com.sanmina.gettingstarted.pojo;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,17 +14,14 @@ import lombok.Setter;
 
 /**
  *
- * @author nestor_milian
+ * @author jorge_covarrubias
  */
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ApplicationMenu {
+public class Plants {
 
-    private Boolean success;
-    private String message;
-    private Menu data;
-    private Plants plants;
+    private List<Plant> plants;
 
 }

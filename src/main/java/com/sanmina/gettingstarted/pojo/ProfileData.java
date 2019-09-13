@@ -9,7 +9,7 @@ package com.sanmina.gettingstarted.pojo;
  *
  * @author nestor_milian
  */
-class ProfileData {
+public class ProfileData {
     private Long idProfile;
     private String profile;
 
