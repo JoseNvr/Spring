@@ -5,9 +5,6 @@
  */
 package com.sanmina.gettingstarted.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  *
  * @author nestor_milian
@@ -17,7 +14,6 @@ import com.sanmina.gettingstarted.pojo.ApplicationPlants;
 import com.sanmina.gettingstarted.pojo.LdapAuth;
 import com.sanmina.gettingstarted.pojo.ResponseApi;
 import com.sanmina.gettingstarted.pojo.UserInfo;
-import com.sanmina.gettingstarted.pojo.ProfileData;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -134,7 +130,6 @@ public class IntranetSecurityController extends GeneralController {
         }
         url = campusAPI + "/getApplicationPlantsProfilePermissionMenu?username=" + userInfo.getUsername()
                 + "&applicationIdName=" + application + "&orgCode=" + plant;
-        System.out.println(url);
         ApplicationMenu applicationMenu;
         try {
             applicationMenu = restTemplate.getForObject(url, ApplicationMenu.class);
@@ -167,7 +162,8 @@ public class IntranetSecurityController extends GeneralController {
             return new ResponseEntity<>(responseApi, HttpStatus.OK);
         }
         String token = jwtTokenProvider.createToken(userInfo.getUsername());
-        System.out.println(token);
+        applicationMenu.setUserInfo(userInfo);
+        applicationMenu.setAuthToken(token);
         responseApi.setSuccess(true);
         responseApi.setData(applicationMenu);
         responseApi.setCode(200);
@@ -176,12 +172,10 @@ public class IntranetSecurityController extends GeneralController {
 
     }
 
-    @RequestMapping(value = "/Get/User/", method = RequestMethod.GET)
+    @RequestMapping(value = "/Get/Token/User/", method = RequestMethod.GET)
     public ResponseEntity<Object> GetUser(@AuthenticationPrincipal UserDetails userDetails) {
         ResponseApi responseApi = new ResponseApi();
         responseApi.setData(userDetails.getUsername());
-        
-
         return new ResponseEntity<>(responseApi, HttpStatus.OK);
     }
 
