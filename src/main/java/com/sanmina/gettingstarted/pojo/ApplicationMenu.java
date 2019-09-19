@@ -24,5 +24,7 @@ public class ApplicationMenu {
     private String message;
     private Menu data;
     private Plants plants;
+    private String authToken;
+    private UserInfo userInfo;
 
 }

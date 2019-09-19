@@ -3,11 +3,11 @@ package com.sanmina.gettingstarted.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -25,20 +25,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         //@formatter:off
         http
+            .cors()
+            .configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues())
+            .and()
             .httpBasic().disable()
             .csrf().disable()
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) 
             .and()
-                .authorizeRequests()
-                .antMatchers("/",
-                        "/favicon.ico",
+                .authorizeRequests() 
+                 .antMatchers("/",
+                        "/**/*.ico",
                         "/**/*.png",
                         "/**/*.gif",
                         "/**/*.svg",
                         "/**/*.jpg",
                         "/**/*.html",
                         "/**/*.css",
-                        "/**/*.js")
+                        "/**/*.js",
+                        "/**/*.ttf",
+                        "/**/*.woff2"
+                        )
                         .permitAll()
                 .antMatchers("/Auth/User/").permitAll()
                 .anyRequest().authenticated()
@@ -46,4 +52,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .apply(new JwtConfigurer(jwtTokenProvider));
         //@formatter:on
     }
+
 }

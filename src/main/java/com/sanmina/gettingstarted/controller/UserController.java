@@ -21,7 +21,7 @@ public class UserController extends GeneralController {
 
 	@RequestMapping(value = "/Get/Data", method = RequestMethod.GET)
 	public ResponseEntity<Object> GetData(@RequestParam("username") String username) {
-		Optional<UserLogin> userLogin = userRepository.findByUserName(username);
+		Optional<UserLogin> userLogin = userRepository.findByUsername(username);
 		return new ResponseEntity<>(userLogin, HttpStatus.OK);
 	}
 
