@@ -5,10 +5,6 @@
  */
 package com.sanmina.gettingstarted.controller;
 
-/**
- *
- * @author nestor_milian
- */
 import com.sanmina.gettingstarted.pojo.ApplicationMenu;
 import com.sanmina.gettingstarted.pojo.ApplicationPlants;
 import com.sanmina.gettingstarted.pojo.LdapAuth;
@@ -28,9 +24,9 @@ import org.springframework.web.client.RestClientException;
 
 /**
  *
- * @author nestor_milian
+ * @author jorge_covarrubias
  */
-@CrossOrigin
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RestController
 public class IntranetSecurityController extends GeneralController {
 
@@ -172,8 +168,15 @@ public class IntranetSecurityController extends GeneralController {
 
     }
 
-    @RequestMapping(value = "/Get/Token/User/", method = RequestMethod.GET)
+    @RequestMapping(value = "/Get/Test/", method = RequestMethod.GET)
     public ResponseEntity<Object> GetUser(@AuthenticationPrincipal UserDetails userDetails) {
+        ResponseApi responseApi = new ResponseApi();
+        responseApi.setData(userDetails.getUsername());
+        return new ResponseEntity<>(responseApi, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/Post/Test/", method = RequestMethod.POST)
+    public ResponseEntity<Object> PostUser(@AuthenticationPrincipal UserDetails userDetails) {
         ResponseApi responseApi = new ResponseApi();
         responseApi.setData(userDetails.getUsername());
         return new ResponseEntity<>(responseApi, HttpStatus.OK);
