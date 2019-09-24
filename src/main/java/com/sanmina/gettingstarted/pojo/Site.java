@@ -18,9 +18,12 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Plant {
+public class Site {
 
-    private String plant;
-    private Integer idPlant;
+    private Integer idSite;
+    private String name;
+    private String codeSite;
+    private String alias;
+    private Boolean active;
 
 }

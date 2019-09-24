@@ -7,21 +7,23 @@ package com.sanmina.gettingstarted.pojo;
 
 import java.util.List;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
  *
- * @author jorge_covarrubias
+ * @author nestor_milian
  */
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-public class Plants {
+public class SitesProfilesMenus {
 
-    private List<Plant> plants;
+    private List<Site> sites;
+    private List<Profile> profiles;
+    private List<Menu> menus;
+    private UserInfo userInfo;
+    private String token;
 
 }

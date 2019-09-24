@@ -12,15 +12,16 @@ import lombok.Setter;
 
 /**
  *
- * @author jorge_covarrubias
+ * @author nestor_milian
  */
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ApplicationPlants {
-    private Boolean success;
-    private String message;
-    private Plants data;
+public class Profile {
+    private Integer idProfile;
+    private String name;
+    private String description;
+    private Boolean active;
 
 }
