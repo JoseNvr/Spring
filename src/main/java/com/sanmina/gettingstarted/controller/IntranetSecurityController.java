@@ -46,14 +46,14 @@ public class IntranetSecurityController extends GeneralController {
                         responseApi.setSuccess(false);
                         responseApi.setMessage("This user isn't active");
                         responseApi.setCode(401);
-                        return new ResponseEntity<>(responseApi, HttpStatus.OK);
+                        return new ResponseEntity<>(responseApi, HttpStatus.UNAUTHORIZED);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                     responseApi.setSuccess(false);
                     responseApi.setMessage("Server Error, Please report this to IT");
                     responseApi.setCode(401);
-                    return new ResponseEntity<>(responseApi, HttpStatus.OK);
+                    return new ResponseEntity<>(responseApi, HttpStatus.UNAUTHORIZED);
                 }
             } else if (user.contains("_") && password != null) {
                 String urlLdap;
@@ -66,19 +66,19 @@ public class IntranetSecurityController extends GeneralController {
                         responseApi.setSuccess(false);
                         responseApi.setMessage("This user isn't active");
                         responseApi.setCode(401);
-                        return new ResponseEntity<>(responseApi, HttpStatus.OK);
+                        return new ResponseEntity<>(responseApi, HttpStatus.UNAUTHORIZED);
                     }
                 } else {
                     responseApi.setSuccess(false);
                     responseApi.setMessage("Incorrect User Or Password");
                     responseApi.setCode(401);
-                    return new ResponseEntity<>(responseApi, HttpStatus.OK);
+                    return new ResponseEntity<>(responseApi, HttpStatus.UNAUTHORIZED);
                 }
             } else {
                 responseApi.setSuccess(false);
                 responseApi.setMessage("Incorrect User Or Password");
                 responseApi.setCode(401);
-                return new ResponseEntity<>(responseApi, HttpStatus.OK);
+                return new ResponseEntity<>(responseApi, HttpStatus.UNAUTHORIZED);
             }
         } catch (RestClientException e) {
             e.printStackTrace();
@@ -91,7 +91,6 @@ public class IntranetSecurityController extends GeneralController {
         }
         String url = campusAPI + "/ProfileApp/ProfileApp/getSiteProfileMenu/" + userInfo.getUsername() + "/"
                 + application;
-        System.out.println(url);
         if (plant == null) {
             try {
                 applicationData = restTemplate.getForObject(url, ApplicationData.class);
@@ -105,7 +104,7 @@ public class IntranetSecurityController extends GeneralController {
                             responseApi.setType("danger");
                             responseApi.setMessage("Este usuario no cuenta con permisos (1*)");
                             responseApi.setCode(401);
-                            return new ResponseEntity<>(responseApi, HttpStatus.OK);
+                            return new ResponseEntity<>(responseApi, HttpStatus.UNAUTHORIZED);
                         }
                     } else {
                         responseApi.setSuccess(false);
@@ -113,7 +112,7 @@ public class IntranetSecurityController extends GeneralController {
                         responseApi.setType("danger");
                         responseApi.setMessage("Este usuario no cuenta con permisos (2*)");
                         responseApi.setCode(401);
-                        return new ResponseEntity<>(responseApi, HttpStatus.OK);
+                        return new ResponseEntity<>(responseApi, HttpStatus.UNAUTHORIZED);
                     }
                 }
             } catch (Exception e) {
@@ -123,7 +122,7 @@ public class IntranetSecurityController extends GeneralController {
                 responseApi.setType("danger");
                 responseApi.setMessage("Este usuario no cuenta con permisos (3*)");
                 responseApi.setCode(401);
-                return new ResponseEntity<>(responseApi, HttpStatus.OK);
+                return new ResponseEntity<>(responseApi, HttpStatus.UNAUTHORIZED);
             }
         } else {
             try {
@@ -138,7 +137,7 @@ public class IntranetSecurityController extends GeneralController {
                         responseApi.setType("danger");
                         responseApi.setMessage("Este usuario no cuenta con permisos (4*)");
                         responseApi.setCode(401);
-                        return new ResponseEntity<>(responseApi, HttpStatus.OK);
+                        return new ResponseEntity<>(responseApi, HttpStatus.UNAUTHORIZED);
                     }
                 } else {
                     responseApi.setSuccess(false);
@@ -146,7 +145,7 @@ public class IntranetSecurityController extends GeneralController {
                     responseApi.setType("danger");
                     responseApi.setMessage("Este usuario no cuenta con permisos (5*)");
                     responseApi.setCode(401);
-                    return new ResponseEntity<>(responseApi, HttpStatus.OK);
+                    return new ResponseEntity<>(responseApi, HttpStatus.UNAUTHORIZED);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -155,7 +154,7 @@ public class IntranetSecurityController extends GeneralController {
                 responseApi.setType("danger");
                 responseApi.setMessage("Este usuario no cuenta con permisos (6*)");
                 responseApi.setCode(401);
-                return new ResponseEntity<>(responseApi, HttpStatus.OK);
+                return new ResponseEntity<>(responseApi, HttpStatus.UNAUTHORIZED);
             }
         }
         String token = jwtTokenProvider.createToken(userInfo.getUsername());

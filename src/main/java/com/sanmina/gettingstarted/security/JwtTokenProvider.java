@@ -26,10 +26,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class JwtTokenProvider {
-    @Value("${security.jwt.token.secret-key:secret}")
-    private String secretKey = "secret";
-    @Value("${security.jwt.token.expire-length:3600000}")
-    private long validityInMilliseconds = 3600000; // 1h
+    @Value("${security.jwt.token.secret-key:Y1JaU8VOhF9YKL2FuMOVc8Oi5gOfNKFA}")
+    private String secretKey = "Y1JaU8VOhF9YKL2FuMOVc8Oi5gOfNKFA";
+    @Value("${security.jwt.token.expire-length:28800000}")
+    private long validityInMilliseconds = 28800000; // 8h 28800000
 
     @PostConstruct
     protected void init() {
