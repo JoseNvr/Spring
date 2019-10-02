@@ -1,4 +1,4 @@
-package com.sanmina.gettingstarted.controller;
+package com.sanmina.basictemplate.controller;
 
 import java.io.IOException;
 import java.security.GeneralSecurityException;
@@ -7,7 +7,7 @@ import java.util.List;
 
 import com.google.api.services.sheets.v4.Sheets;
 import com.google.api.services.sheets.v4.model.ValueRange;
-import com.sanmina.gettingstarted.model.UserLogin;
+import com.sanmina.basictemplate.model.UserLogin;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

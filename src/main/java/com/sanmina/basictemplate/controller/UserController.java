@@ -1,9 +1,9 @@
-package com.sanmina.gettingstarted.controller;
+package com.sanmina.basictemplate.controller;
 
 import java.util.Optional;
 
-import com.sanmina.gettingstarted.model.UserLogin;
-import com.sanmina.gettingstarted.pojo.UserLoginData;
+import com.sanmina.basictemplate.model.UserLogin;
+import com.sanmina.basictemplate.pojo.UserLoginData;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

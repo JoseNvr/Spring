@@ -6,7 +6,7 @@
             "request": "launch",
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",
-            "mainClass": "com.sanmina.gettingstarted.Application",
+            "mainClass": "com.sanmina.basictemplate.Application",
             "projectName": "spring-boot-getting-started",
             "args": ""
         }

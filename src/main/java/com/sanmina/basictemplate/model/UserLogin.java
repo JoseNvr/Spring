@@ -1,4 +1,4 @@
-package com.sanmina.gettingstarted.model;
+package com.sanmina.basictemplate.model;
 
 import java.util.ArrayList;
 import java.util.List;

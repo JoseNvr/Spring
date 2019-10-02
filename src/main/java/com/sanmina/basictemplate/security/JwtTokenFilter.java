@@ -1,4 +1,4 @@
-package com.sanmina.gettingstarted.security;
+package com.sanmina.basictemplate.security;
 
 import java.io.IOException;
 

@@ -1,4 +1,4 @@
-package com.sanmina.gettingstarted.security;
+package com.sanmina.basictemplate.security;
 
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

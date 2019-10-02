@@ -3,12 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.sanmina.gettingstarted.controller;
+package com.sanmina.basictemplate.controller;
 
-import com.sanmina.gettingstarted.pojo.ApplicationData;
-import com.sanmina.gettingstarted.pojo.LdapAuth;
-import com.sanmina.gettingstarted.pojo.ResponseApi;
-import com.sanmina.gettingstarted.pojo.UserInfo;
+import com.sanmina.basictemplate.pojo.ApplicationData;
+import com.sanmina.basictemplate.pojo.LdapAuth;
+import com.sanmina.basictemplate.pojo.ResponseApi;
+import com.sanmina.basictemplate.pojo.UserInfo;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
