@@ -1,4 +1,4 @@
-package com.sanmina.gettingstarted;
+package com.sanmina.basictemplate;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

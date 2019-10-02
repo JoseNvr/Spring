@@ -1,4 +1,4 @@
-package com.sanmina.gettingstarted.security;
+package com.sanmina.basictemplate.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

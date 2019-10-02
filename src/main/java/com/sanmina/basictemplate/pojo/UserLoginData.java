@@ -1,4 +1,4 @@
-package com.sanmina.gettingstarted.pojo;
+package com.sanmina.basictemplate.pojo;
 
 // import lombok.Getter;
 // import lombok.NoArgsConstructor;

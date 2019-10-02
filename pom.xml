@@ -3,11 +3,11 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.sanmina</groupId>
-	<artifactId>spring-boot-getting-started</artifactId>
+	<artifactId>spring-boot-basic-template</artifactId>
 	<version>0.0.1</version>
 	<packaging>war</packaging>
 
-	<name>SpringBootGettingStarted</name>
+	<name>SpringBootBasicTemplate</name>
 	<description>Demo project for Spring Boot</description>
 
 	<parent>
@@ -22,7 +22,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
-		<start-class>com.sanmina.gettingstarted.Application</start-class>
+		<start-class>com.sanmina.basictemplate.Application</start-class>
 	</properties>
 
 	<dependencies>
@@ -97,7 +97,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
-		<finalName>GettingStarted</finalName>
+		<finalName>BasicTemplate</finalName>
 	</build>
 
 

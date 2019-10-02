@@ -1,8 +1,8 @@
-package com.sanmina.gettingstarted.controller;
+package com.sanmina.basictemplate.controller;
 
-import com.sanmina.gettingstarted.component.GoogleApiComponent;
-import com.sanmina.gettingstarted.repository.UserRepository;
-import com.sanmina.gettingstarted.security.JwtTokenProvider;
+import com.sanmina.basictemplate.component.GoogleApiComponent;
+import com.sanmina.basictemplate.repository.UserRepository;
+import com.sanmina.basictemplate.security.JwtTokenProvider;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestTemplate;

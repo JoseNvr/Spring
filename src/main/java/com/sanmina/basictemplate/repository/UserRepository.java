@@ -1,8 +1,8 @@
-package com.sanmina.gettingstarted.repository;
+package com.sanmina.basictemplate.repository;
 
 import java.util.Optional;
 
-import com.sanmina.gettingstarted.model.UserLogin;
+import com.sanmina.basictemplate.model.UserLogin;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.core.annotation.RepositoryRestResource;

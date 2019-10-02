@@ -1,5 +1,4 @@
 /target/
-!.mvn/wrapper/maven-wrapper.jar
 
 ### STS ###
 .apt_generated
@@ -34,3 +33,6 @@
 .factorypath
 .classpath
 .vscode/settings.json
+.*
+!.gitignore
+

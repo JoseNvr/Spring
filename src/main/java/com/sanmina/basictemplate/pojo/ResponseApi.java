@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.sanmina.gettingstarted.pojo;
+package com.sanmina.basictemplate.pojo;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,13 +11,17 @@ import lombok.Setter;
 
 /**
  *
- * @author jorge_covarrubias
+ * @author nestor_milian
  */
 @Getter
 @Setter
 @NoArgsConstructor
-public class ApplicationData {
+public class ResponseApi {
     private Boolean success;
     private String message;
-    private SitesProfilesMenus data;
+    private String title;
+    private Integer code;
+    private Object data;
+    private String type;
+
 }
