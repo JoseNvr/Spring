@@ -40,7 +40,9 @@ public class IntranetSecurityController extends GeneralController {
         try {
             if (user.contains("@sanmina.com") && password == null) { // WIth Google Account
                 try {
-                    userInfo = restTemplate.getForObject(plant8API + "/GetEmployeeNumber/?employee=" + user,
+                    user = user.replace("@sanmina.com","");
+                    user = user.replace(".","_");
+                    userInfo = restTemplate.getForObject(campusAPI + "/User/User/FindUser/" + user,
                             UserInfo.class);
                     if (!userInfo.getActive()) {
                         responseApi.setSuccess(false);
@@ -59,7 +61,7 @@ public class IntranetSecurityController extends GeneralController {
                 String urlLdap;
                 urlLdap = plant8API + "/ldapAuth/?user=" + user + "&password=" + password;
                 LdapAuth ldapAuth = restTemplate.getForObject(urlLdap, LdapAuth.class);
-                userInfo = restTemplate.getForObject(plant8API + "/GetEmployeeNumber/?employee=" + user,
+                userInfo = restTemplate.getForObject(campusAPI + "/User/User/FindUser/" + user,
                         UserInfo.class);
                 if (ldapAuth.getSuccess() && userInfo != null) {
                     if (!userInfo.getActive()) {
@@ -89,7 +91,7 @@ public class IntranetSecurityController extends GeneralController {
             responseApi.setCode(500);
             return new ResponseEntity<>(responseApi, HttpStatus.OK);
         }
-        String url = campusAPI + "/ProfileApp/ProfileApp/getSiteProfileMenu/" + userInfo.getUsername() + "/"
+        String url = campusAPI + "/ProfileApp/ProfileApp/getSiteProfileMenu/" + userInfo.getUserName() + "/"
                 + application;
         if (plant == null) {
             try {
@@ -157,7 +159,7 @@ public class IntranetSecurityController extends GeneralController {
                 return new ResponseEntity<>(responseApi, HttpStatus.UNAUTHORIZED);
             }
         }
-        String token = jwtTokenProvider.createToken(userInfo.getUsername());
+        String token = jwtTokenProvider.createToken(userInfo.getUserName());
         applicationData.getData().setUserInfo(userInfo);
         applicationData.getData().setToken(token);
         responseApi.setSuccess(true);

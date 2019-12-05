@@ -5,55 +5,27 @@
  */
 package com.sanmina.basictemplate.pojo;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 /**
  *
  * @author nestor_milian
  */
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class UserInfo {
     private String name;
-    private String username;
-    private String email;
+    private String lastName;
+    private String userName;
+    private String employeeNumber;
+    private String mail;
     private String number;
     private Boolean active;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getNumber() {
-        return number;
-    }
-
-    public void setNumber(String number) {
-        this.number = number;
-    }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
-    
+   
 }

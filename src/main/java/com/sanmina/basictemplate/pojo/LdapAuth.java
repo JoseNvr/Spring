@@ -5,28 +5,21 @@
  */
 package com.sanmina.basictemplate.pojo;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
 /**
  *
  * @author nestor_milian
  */
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class LdapAuth {
     private Boolean success;
     private String message;
-
-    public Boolean getSuccess() {
-        return success;
-    }
-
-    public void setSuccess(Boolean success) {
-        this.success = success;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
 
 }
