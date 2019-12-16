@@ -6,6 +6,8 @@
 package com.sanmina.basictemplate.controller;
 
 import com.sanmina.basictemplate.pojo.ApplicationData;
+import com.sanmina.basictemplate.pojo.ApplicationInfo;
+import com.sanmina.basictemplate.pojo.ApplicationVersion;
 import com.sanmina.basictemplate.pojo.LdapAuth;
 import com.sanmina.basictemplate.pojo.ResponseApi;
 import com.sanmina.basictemplate.pojo.UserInfo;
@@ -40,10 +42,9 @@ public class IntranetSecurityController extends GeneralController {
         try {
             if (user.contains("@sanmina.com") && password == null) { // WIth Google Account
                 try {
-                    user = user.replace("@sanmina.com","");
-                    user = user.replace(".","_");
-                    userInfo = restTemplate.getForObject(campusAPI + "/User/User/FindUser/" + user,
-                            UserInfo.class);
+                    user = user.replace("@sanmina.com", "");
+                    user = user.replace(".", "_");
+                    userInfo = restTemplate.getForObject(campusAPI + "/User/User/FindUser/" + user, UserInfo.class);
                     if (!userInfo.getActive()) {
                         responseApi.setSuccess(false);
                         responseApi.setMessage("This user isn't active");
@@ -61,8 +62,7 @@ public class IntranetSecurityController extends GeneralController {
                 String urlLdap;
                 urlLdap = plant8API + "/ldapAuth/?user=" + user + "&password=" + password;
                 LdapAuth ldapAuth = restTemplate.getForObject(urlLdap, LdapAuth.class);
-                userInfo = restTemplate.getForObject(campusAPI + "/User/User/FindUser/" + user,
-                        UserInfo.class);
+                userInfo = restTemplate.getForObject(campusAPI + "/User/User/FindUser/" + user, UserInfo.class);
                 if (ldapAuth.getSuccess() && userInfo != null) {
                     if (!userInfo.getActive()) {
                         responseApi.setSuccess(false);
@@ -162,12 +162,43 @@ public class IntranetSecurityController extends GeneralController {
         String token = jwtTokenProvider.createToken(userInfo.getUserName());
         applicationData.getData().setUserInfo(userInfo);
         applicationData.getData().setToken(token);
+        url = campusAPI + "/App/App/FindApp/" + application;
+        ApplicationInfo applicationInfo = restTemplate.getForObject(url, ApplicationInfo.class);
+        url = campusAPI + "/App/App/getLastVersion/" + applicationInfo.getIdApp();
+        ApplicationVersion applicationVersion = restTemplate.getForObject(url, ApplicationVersion.class);
+        applicationData.getData()
+                .setApplicationVersion(applicationVersion.getMajor() + "." + applicationVersion.getMinor() + "."
+                        + applicationVersion.getBug() + "." + applicationVersion.getTest());
         responseApi.setSuccess(true);
         responseApi.setData(applicationData.getData());
         responseApi.setCode(200);
         responseApi.setMessage("Welcome " + userInfo.getName());
         return new ResponseEntity<>(responseApi, HttpStatus.OK);
 
+    }
+
+    @RequestMapping(value = "/Refresh/DataAndMenus/", method = RequestMethod.GET)
+    public ResponseEntity<Object> RefreshDataAndMenus(@AuthenticationPrincipal UserDetails userDetails,
+            @RequestParam(name = "plant", required = false) String plant,
+            @RequestParam("application") String application) {
+        ResponseApi responseApi = new ResponseApi();
+        String url = campusAPI + "/ProfileApp/ProfileApp/getSiteProfileMenu/" + userDetails.getUsername() + "/"
+                + application; 
+        ApplicationData applicationDataAll = restTemplate.getForObject(url, ApplicationData.class);
+        url = url + "/" + plant;
+        ApplicationData applicationData = restTemplate.getForObject(url, ApplicationData.class);
+        applicationData.getData().setSites(applicationDataAll.getData().getSites());
+        url = campusAPI + "/App/App/FindApp/" + application;
+        ApplicationInfo applicationInfo = restTemplate.getForObject(url, ApplicationInfo.class);
+        url = campusAPI + "/App/App/getLastVersion/" + applicationInfo.getIdApp();
+        ApplicationVersion applicationVersion = restTemplate.getForObject(url, ApplicationVersion.class);
+        applicationData.getData()
+                .setApplicationVersion(applicationVersion.getMajor() + "." + applicationVersion.getMinor() + "."
+                        + applicationVersion.getBug() + "." + applicationVersion.getTest());
+        responseApi.setSuccess(true);
+        responseApi.setData(applicationData.getData());
+        responseApi.setCode(200);
+        return new ResponseEntity<>(responseApi, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/Get/Test/", method = RequestMethod.GET)

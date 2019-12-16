@@ -5,8 +5,7 @@
  */
 package com.sanmina.basictemplate.pojo;
 
-import java.util.List;
-
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,16 +14,15 @@ import lombok.Setter;
  *
  * @author nestor_milian
  */
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-@NoArgsConstructor
-public class SitesProfilesMenus {
-
-    private List<Site> sites;
-    private List<Profile> profiles;
-    private List<Menu> menus;
-    private UserInfo userInfo;
-    private String applicationVersion;
-    private String token;
+public class ApplicationInfo {
+    private Integer idApp;
+    private String name;
+    private String description;
+    private Boolean active;
+    private String visitCounter;
 
 }
