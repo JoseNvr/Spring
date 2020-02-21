@@ -12,6 +12,7 @@ import com.sanmina.basictemplate.pojo.LdapAuth;
 import com.sanmina.basictemplate.pojo.ResponseApi;
 import com.sanmina.basictemplate.pojo.UserInfo;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -159,7 +160,7 @@ public class IntranetSecurityController extends GeneralController {
                 return new ResponseEntity<>(responseApi, HttpStatus.UNAUTHORIZED);
             }
         }
-        String token = jwtTokenProvider.createToken(userInfo.getUserName());
+        String token = jwtTokenProvider.createToken(userInfo.getUserName(), application, plant);
         applicationData.getData().setUserInfo(userInfo);
         applicationData.getData().setToken(token);
         url = campusAPI + "/App/App/FindApp/" + application;
@@ -183,7 +184,7 @@ public class IntranetSecurityController extends GeneralController {
             @RequestParam("application") String application) {
         ResponseApi responseApi = new ResponseApi();
         String url = campusAPI + "/ProfileApp/ProfileApp/getSiteProfileMenu/" + userDetails.getUsername() + "/"
-                + application; 
+                + application;
         ApplicationData applicationDataAll = restTemplate.getForObject(url, ApplicationData.class);
         url = url + "/" + plant;
         ApplicationData applicationData = restTemplate.getForObject(url, ApplicationData.class);
