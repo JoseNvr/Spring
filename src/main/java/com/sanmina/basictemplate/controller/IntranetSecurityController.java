@@ -8,6 +8,7 @@ package com.sanmina.basictemplate.controller;
 import com.sanmina.basictemplate.pojo.ApplicationData;
 import com.sanmina.basictemplate.pojo.ApplicationInfo;
 import com.sanmina.basictemplate.pojo.ApplicationVersion;
+import com.sanmina.basictemplate.pojo.LoginAuth;
 import com.sanmina.basictemplate.pojo.ResponseApi;
 import com.sanmina.basictemplate.pojo.UserInfo;
 import com.sanmina.basictemplate.pojo.ldap.LoginRequest;
@@ -18,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,21 +34,20 @@ import org.springframework.web.client.RestClientException;
 @RestController
 public class IntranetSecurityController extends GeneralController {
 
-    @RequestMapping(value = "/Auth/User/", method = RequestMethod.GET)
-    public ResponseEntity<Object> GetUserInfo(@RequestParam("user") String user,
-            @RequestParam(name = "password", required = false) String password,
-            @RequestParam(name = "plant", required = false) String plant,
-            @RequestParam("application") String application) throws Exception {
+    @RequestMapping(value = "/Auth/User/", method = RequestMethod.POST)
+    public ResponseEntity<Object> GetUserInfo(@RequestBody LoginAuth loginAuth) throws Exception {
         ResponseApi responseApi = new ResponseApi();
         UserInfo userInfo = null;
         LoginResponse validateAppM;
         ApplicationData applicationData;
         try {
-            if (user.contains("@sanmina.com") && password == null) { // WIth Google Account
+            if (loginAuth.getUser().contains("@sanmina.com") && loginAuth.getPassword() == null) { // WIth Google
+                                                                                                   // Account
                 try {
-                    user = user.replace("@sanmina.com", "");
-                    user = user.replace(".", "_");
-                    userInfo = restTemplate.getForObject(campusAPI + "/User/User/FindUser/" + user, UserInfo.class);
+                    loginAuth.setUser(loginAuth.getUser().replace("@sanmina.com", ""));
+                    loginAuth.setUser(loginAuth.getUser().replace(".", "_"));
+                    userInfo = restTemplate.getForObject(campusAPI + "/User/User/FindUser/" + loginAuth.getUser(),
+                            UserInfo.class);
                     if (!userInfo.getActive()) {
                         responseApi.setSuccess(false);
                         responseApi.setMessage("This user isn't active");
@@ -60,9 +61,11 @@ public class IntranetSecurityController extends GeneralController {
                     responseApi.setCode(401);
                     return new ResponseEntity<>(responseApi, HttpStatus.UNAUTHORIZED);
                 }
-            } else if (!user.contains("@sanmina.com") && password != null) {
-                validateAppM = validateCredentials(user, password, application);
-                userInfo = restTemplate.getForObject(campusAPI + "/User/User/FindUser/" + user, UserInfo.class);
+            } else if (!loginAuth.getUser().contains("@sanmina.com") && loginAuth.getPassword() != null) {
+                validateAppM = validateCredentials(loginAuth.getUser(), loginAuth.getPassword(),
+                        loginAuth.getApplication());
+                userInfo = restTemplate.getForObject(campusAPI + "/User/User/FindUser/" + loginAuth.getUser(),
+                        UserInfo.class);
                 if (validateAppM.getLogged() && userInfo != null) {
                     if (!userInfo.getActive()) {
                         responseApi.setSuccess(false);
@@ -96,14 +99,14 @@ public class IntranetSecurityController extends GeneralController {
             return new ResponseEntity<>(responseApi, HttpStatus.OK);
         }
         String url = campusAPI + "/ProfileApp/ProfileApp/getSiteProfileMenu/" + userInfo.getUserName() + "/"
-                + application;
-        if (plant == null) {
+                + loginAuth.getApplication();
+        if (loginAuth.getPlant() == null) {
             try {
                 applicationData = restTemplate.getForObject(url, ApplicationData.class);
-                if (plant == null) {
+                if (loginAuth.getPlant() == null) {
                     if (applicationData.getSuccess()) {
                         if (applicationData.getData().getSites().size() > 0) {
-                            plant = applicationData.getData().getSites().get(0).getName();
+                            loginAuth.setPlant(applicationData.getData().getSites().get(0).getName());
                         } else {
                             responseApi.setSuccess(false);
                             responseApi.setTitle("Usuario sin permisos para la aplicación");
@@ -133,7 +136,7 @@ public class IntranetSecurityController extends GeneralController {
         } else {
             try {
                 ApplicationData applicationDataAll = restTemplate.getForObject(url, ApplicationData.class);
-                url = url + "/" + plant;
+                url = url + "/" + loginAuth.getPlant();
                 applicationData = restTemplate.getForObject(url, ApplicationData.class);
                 applicationData.getData().setSites(applicationDataAll.getData().getSites());
                 if (applicationData.getSuccess()) {
@@ -163,10 +166,11 @@ public class IntranetSecurityController extends GeneralController {
                 return new ResponseEntity<>(responseApi, HttpStatus.UNAUTHORIZED);
             }
         }
-        String token = jwtTokenProvider.createToken(userInfo.getUserName(), application, plant);
+        String token = jwtTokenProvider.createToken(userInfo.getUserName(), loginAuth.getApplication(),
+                loginAuth.getPlant());
         applicationData.getData().setUserInfo(userInfo);
         applicationData.getData().setToken(token);
-        url = campusAPI + "/App/App/FindApp/" + application;
+        url = campusAPI + "/App/App/FindApp/" + loginAuth.getApplication();
         ApplicationInfo applicationInfo = restTemplate.getForObject(url, ApplicationInfo.class);
         url = campusAPI + "/App/App/getLastVersion/" + applicationInfo.getIdApp();
         ApplicationVersion applicationVersion = restTemplate.getForObject(url, ApplicationVersion.class);
