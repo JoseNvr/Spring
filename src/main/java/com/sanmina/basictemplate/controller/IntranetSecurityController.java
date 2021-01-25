@@ -8,11 +8,11 @@ package com.sanmina.basictemplate.controller;
 import com.sanmina.basictemplate.pojo.ApplicationData;
 import com.sanmina.basictemplate.pojo.ApplicationInfo;
 import com.sanmina.basictemplate.pojo.ApplicationVersion;
-import com.sanmina.basictemplate.pojo.LdapAuth;
 import com.sanmina.basictemplate.pojo.ResponseApi;
 import com.sanmina.basictemplate.pojo.UserInfo;
+import com.sanmina.basictemplate.pojo.ldap.LoginRequest;
+import com.sanmina.basictemplate.pojo.ldap.LoginResponse;
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -36,9 +36,10 @@ public class IntranetSecurityController extends GeneralController {
     public ResponseEntity<Object> GetUserInfo(@RequestParam("user") String user,
             @RequestParam(name = "password", required = false) String password,
             @RequestParam(name = "plant", required = false) String plant,
-            @RequestParam("application") String application) {
+            @RequestParam("application") String application) throws Exception {
         ResponseApi responseApi = new ResponseApi();
         UserInfo userInfo = null;
+        LoginResponse validateAppM;
         ApplicationData applicationData;
         try {
             if (user.contains("@sanmina.com") && password == null) { // WIth Google Account
@@ -59,12 +60,10 @@ public class IntranetSecurityController extends GeneralController {
                     responseApi.setCode(401);
                     return new ResponseEntity<>(responseApi, HttpStatus.UNAUTHORIZED);
                 }
-            } else if (user.contains("_") && password != null) {
-                String urlLdap;
-                urlLdap = plant8API + "/ldapAuth/?user=" + user + "&password=" + password;
-                LdapAuth ldapAuth = restTemplate.getForObject(urlLdap, LdapAuth.class);
+            } else if (!user.contains("@sanmina.com") && password != null) {
+                validateAppM = validateCredentials(user, password, application);
                 userInfo = restTemplate.getForObject(campusAPI + "/User/User/FindUser/" + user, UserInfo.class);
-                if (ldapAuth.getSuccess() && userInfo != null) {
+                if (validateAppM.getLogged() && userInfo != null) {
                     if (!userInfo.getActive()) {
                         responseApi.setSuccess(false);
                         responseApi.setMessage("This user isn't active");
@@ -73,7 +72,11 @@ public class IntranetSecurityController extends GeneralController {
                     }
                 } else {
                     responseApi.setSuccess(false);
-                    responseApi.setMessage("Incorrect User Or Password");
+                    if (!validateAppM.getLoginMessage().isEmpty()) {
+                        responseApi.setMessage(validateAppM.getLoginMessage());
+                    } else {
+                        responseApi.setMessage(validateAppM.getServerMessage());
+                    }
                     responseApi.setCode(401);
                     return new ResponseEntity<>(responseApi, HttpStatus.UNAUTHORIZED);
                 }
@@ -214,6 +217,17 @@ public class IntranetSecurityController extends GeneralController {
         ResponseApi responseApi = new ResponseApi();
         responseApi.setData(userDetails.getUsername());
         return new ResponseEntity<>(responseApi, HttpStatus.OK);
+    }
+
+    public LoginResponse validateCredentials(String user, String password, String appName) {
+        String url = campusAPI + "/User/User/login";
+        LoginRequest request = new LoginRequest();
+        request.setUser(user);
+        request.setPassword(password);
+        request.setAppName(appName);
+        LoginResponse response = restTemplate.postForObject(url, request, LoginResponse.class);
+
+        return response;
     }
 
 }

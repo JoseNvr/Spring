@@ -49,7 +49,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         )
                         .permitAll()
                 .antMatchers("/Auth/User/").permitAll()
-                .antMatchers("/Get/Test/").authenticated() // Modo para validar unicamente que el token y la sesión sean correctos
+                .antMatchers("/Get/Test/").permitAll() // Modo para validar unicamente que el token y la sesión sean correctos
                 // .antMatchers("/Get/Test/").hasAnyAuthority("Admin","Other") // Metodo para limitar el acceso a permisos especificos declarados en el app manager
                 .anyRequest().authenticated()
             .and()
