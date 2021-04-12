@@ -39,6 +39,7 @@ public class JwtTokenProvider {
     @Value("${security.jwt.token.expire-length:28800000}")
     private long validityInMilliseconds = 28800000; // 8h 28800000
     private String campusAPI = "http://gdl1amwebl01.sanmina.com/WebService_APPM";
+    private List<ApplicationData> applicationDataList = new ArrayList<>();
 
     @PostConstruct
     protected void init() {
@@ -53,13 +54,37 @@ public class JwtTokenProvider {
                 .signWith(SignatureAlgorithm.HS256, secretKey).compact();
     }
 
-    public Authentication getAuthentication(String token) {
+    private ApplicationData getAppManagerProfiles(String token) {
         String username = getUsername(token);
+        for (ApplicationData applicationDataTmp : applicationDataList) {
+            if (applicationDataTmp.getToken().equals(token)) {
+                return applicationDataTmp;
+            }
+            if (applicationDataTmp.getUserName().equals(username)) {
+                String[] applicationAndPlant = getApplicationAndPlant(token);
+                RestTemplate restTemplate = new RestTemplate();
+                String url = campusAPI + "/ProfileApp/ProfileApp/getSiteProfileMenu/" + username + "/"
+                        + applicationAndPlant[0] + "/" + applicationAndPlant[1];
+                applicationDataTmp = restTemplate.getForObject(url, ApplicationData.class);
+                applicationDataTmp.setToken(token);
+                applicationDataTmp.setUserName(username);
+                return applicationDataTmp;
+            }
+        }
         String[] applicationAndPlant = getApplicationAndPlant(token);
         RestTemplate restTemplate = new RestTemplate();
         String url = campusAPI + "/ProfileApp/ProfileApp/getSiteProfileMenu/" + username + "/" + applicationAndPlant[0]
                 + "/" + applicationAndPlant[1];
         ApplicationData applicationData = restTemplate.getForObject(url, ApplicationData.class);
+        applicationData.setToken(token);
+        applicationData.setUserName(username);
+        applicationDataList.add(applicationData);
+        return applicationData;
+    }
+
+    public Authentication getAuthentication(String token) {
+        String username = getUsername(token);
+        ApplicationData applicationData = getAppManagerProfiles(token);
         UserDetails userDetails = new User(username, username, getAuthorities(applicationData.getData().getProfiles()));
         return new UsernamePasswordAuthenticationToken(userDetails, "Test", userDetails.getAuthorities());
     }

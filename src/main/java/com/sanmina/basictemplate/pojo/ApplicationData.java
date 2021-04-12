@@ -19,5 +19,7 @@ import lombok.Setter;
 public class ApplicationData {
     private Boolean success;
     private String message;
+    private String token;
+    private String userName;
     private SitesProfilesMenus data;
 }
