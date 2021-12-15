@@ -1,55 +1,53 @@
-package com.sanmina.basictemplate.model;
+// package com.sanmina.basictemplate.model;
 
-import java.util.ArrayList;
-import java.util.List;
+// import java.util.ArrayList;
+// import java.util.List;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
+// import javax.persistence.Column;
+// import javax.persistence.Entity;
+// import javax.persistence.GeneratedValue;
+// import javax.persistence.GenerationType;
+// import javax.persistence.Id;
+// import javax.persistence.Table;
+// import javax.persistence.Transient;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+// import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-@Entity
-/*
- * Si se desea utilizar Lombook es necesario eliminar Getter y Setter,
- * descomentando la dependecia del archivo pom.xml
- */
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-@JsonIgnoreProperties({ "password" })
-@Table(catalog = "[db_SpringTest]", schema = "[dbo]")
-public class UserLogin {
+// import lombok.AllArgsConstructor;
+// import lombok.Getter;
+// import lombok.NoArgsConstructor;
+// import lombok.Setter;
 
 
-	@Id
-	@Column(name = "[id]")
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Integer id;
 
-	@Column(name = "[Name]")
-	private String name;
+// @Entity
+// @AllArgsConstructor
+// @NoArgsConstructor
+// @Getter
+// @Setter
+// @JsonIgnoreProperties({ "password" })
+// @Table(catalog = "[db_SpringTest]", schema = "[dbo]")
+// public class UserLogin {
 
-	@Column(name = "[Username]")
-	private String username;
 
-	@Column(name = "[Password]")
-	private String password;
+// 	@Id
+// 	@Column(name = "[id]")
+// 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+// 	private Integer id;
 
-	@Column(name = "[Plant]")
-	private String plant;
+// 	@Column(name = "[Name]")
+// 	private String name;
 
-	@Transient
-	private List<String> roles = new ArrayList<>();
+// 	@Column(name = "[Username]")
+// 	private String username;
 
-}
+// 	@Column(name = "[Password]")
+// 	private String password;
+
+// 	@Column(name = "[Plant]")
+// 	private String plant;
+
+// 	@Transient
+// 	private List<String> roles = new ArrayList<>();
+
+// }

@@ -1,7 +1,6 @@
 package com.sanmina.basictemplate.controller;
 
 import com.sanmina.basictemplate.component.GoogleApiComponent;
-import com.sanmina.basictemplate.repository.UserRepository;
 import com.sanmina.basictemplate.security.JwtTokenProvider;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +16,8 @@ public class GeneralController {
 
     @Autowired
     JwtTokenProvider jwtTokenProvider;
-    @Autowired
-    UserRepository userRepository;
+    // @Autowired 
+    // UserRepository userRepository;
     @Autowired
     GoogleApiComponent googleApiComponent;
 
